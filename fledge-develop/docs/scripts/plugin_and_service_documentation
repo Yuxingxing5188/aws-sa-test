@@ -1,0 +1,245 @@
+#!/bin/bash
+
+if [[ "${USERNAME}" == "" ]] || [[ "${GITHUB_ACCESS_TOKEN}" == "" ]]; then
+    echo "You must have set a GitHub username & access token environment variable. Like export USERNAME=YOUR_USERNAME; export GITHUB_ACCESS_TOKEN=YOUR_ACCESS_TOKEN";
+    exit 1
+fi
+# Always create a fresh set of Plugin & Service documentation
+if [ -d plugins ]; then rm -rf plugins; fi
+mkdir plugins
+if [ -d services ]; then rm -rf services; fi
+mkdir services
+
+cat > plugins/south.rst << EOFSOUTH
+********************
+Fledge South Plugins
+********************
+
+.. toctree::
+
+EOFSOUTH
+cat > plugins/north.rst << EOFNORTH
+********************
+Fledge North Plugins
+********************
+
+.. toctree::
+
+EOFNORTH
+cat > plugins/filter.rst << EOFFILTER
+*********************
+Fledge Filter Plugins
+*********************
+
+.. toctree::
+
+EOFFILTER
+cat > plugins/rule.rst << EOFRULE
+********************************
+Fledge Notification Rule Plugins
+********************************
+
+.. toctree::
+
+EOFRULE
+cat > plugins/notify.rst << EOFNOTIFY
+************************************
+Fledge Notification Delivery Plugins
+************************************
+
+.. toctree::
+
+EOFNOTIFY
+
+DOCBRANCH="$1"
+# TODO: source code documentation always point to nightly irrespective of the DOCBRANCH
+#  In future may point to specific branch/release version
+ARCHIVE_BUILD="nightly"
+echo "Default ${DOCBRANCH} branch used for plugin documentation and ${ARCHIVE_BUILD} build used for source code documentation"
+# Tweaks required in plugin developer guide to enable source code documentation
+sed -i 's/ARCHIVE_BUILD_NAME/'"${ARCHIVE_BUILD}"'/g' plugin_developers_guide/00_source_code_doc.rst
+header="Authorization: token ${GITHUB_ACCESS_TOKEN}"
+# Get total number of repository pages in fledge org.
+fledgeRepoPagesCount=$(curl -sI https://api.github.com/orgs/fledge-iot/repos | grep -oP '\d+(?=>; rel="last")')
+fledgeRepos=$(curl -H "$header" -sX GET https://api.github.com/orgs/fledge-iot/repos\?page=[1-$fledgeRepoPagesCount])
+fledgeRepos="$(echo $fledgeRepos | sed 's/\] \[/,/g')"
+fetchTopicReposPyScript='
+import json,sys;\
+repos=json.load(sys.stdin);\
+fRepos = [r["name"] for r in repos["items"]];\
+print("\n".join(fRepos));
+'
+fledge_wip_repos=$(curl -sX GET -H "$header" -H "Accept: application/vnd.github.mercy-preview+json" https://api.github.com/search/repositories?q=topic:wip+org:fledge-iot)
+fledge_poc_repos=$(curl -sX GET -H "$header" -H "Accept: application/vnd.github.mercy-preview+json" https://api.github.com/search/repositories?q=topic:poc+org:fledge-iot)
+fledge_internal_repos=$(curl -sX GET -H "$header" -H "Accept: application/vnd.github.mercy-preview+json" https://api.github.com/search/repositories?q=topic:internal+org:fledge-iot)
+fledge_obsolete_repos=$(curl -sX GET -H "$header" -H "Accept: application/vnd.github.mercy-preview+json" https://api.github.com/search/repositories?q=topic:obsolete+org:fledge-iot)
+fledge_wip_repos_name=$(echo ${fledge_wip_repos} | python3 -c "$fetchTopicReposPyScript" | sort -f)
+fledge_poc_repos_name=$(echo ${fledge_poc_repos} | python3 -c "$fetchTopicReposPyScript" | sort -f)
+fledge_internal_repos_name=$(echo ${fledge_internal_repos} | python3 -c "$fetchTopicReposPyScript" | sort -f)
+fledge_obsolete_repos_name=$(echo ${fledge_obsolete_repos} | python3 -c "$fetchTopicReposPyScript" | sort -f)
+export EXCLUDE_FLEDGE_TOPIC_REPOSITORIES=$(echo ${fledge_wip_repos_name} ${fledge_poc_repos_name} ${fledge_internal_repos_name} ${fledge_obsolete_repos_name} | sort -f)
+echo "EXCLUDED FLEDGE TOPIC REPOS LIST: $EXCLUDE_FLEDGE_TOPIC_REPOSITORIES"
+fetchFledgeReposPyScript='
+import os,json,sys;\
+repos=json.load(sys.stdin);\
+exclude_topic_packages=os.environ["EXCLUDE_FLEDGE_TOPIC_REPOSITORIES"];\
+all_repos = [r["name"] for r in repos if r["archived"] is False];\
+fRepos = list(set(all_repos) - set(exclude_topic_packages.split()));\
+print("\n".join(fRepos));
+'
+REPOS=$(echo ${fledgeRepos} | python3 -c "$fetchFledgeReposPyScript" | sort -f)
+INBUILT_PLUGINS="fledge-north-OMF fledge-rule-Threshold fledge-rule-DataAvailability"
+REPOSITORIES=$(echo ${REPOS} ${INBUILT_PLUGINS} | xargs -n1 | sort -f | xargs)
+echo "REPOSITORIES LIST: "${REPOSITORIES}
+
+function plugin_and_service_doc {
+    repo_name=$1
+    dest=$2
+    dir_type=$3
+    type=$(echo ${repo_name} | sed -e 's/fledge-//' -e 's/-.*//')
+    name=$(echo ${repo_name} | sed -e 's/fledge-//' -e "s/${type}-//")
+    mkdir -p /tmp/doc.$$
+    cd /tmp/doc.$$
+    git clone -b ${DOCBRANCH} --single-branch https://${USERNAME}:${GITHUB_ACCESS_TOKEN}@github.com/fledge-iot/${repo_name}.git
+
+    if [[ ${type} != "service" ]]; then
+        # cloned directory replaced with installed directory name which is defined in Package file for each repo
+        installed_plugin_dir_name=$(cat ${repo_name}/Package | grep plugin_install_dirname= | sed -e "s/plugin_install_dirname=//g")
+        if [[ ${installed_plugin_dir_name} == "\${plugin_name}" ]]; then
+            installed_plugin_dir_name=$(cat ${repo_name}/Package | grep plugin_name= | sed -e "s/plugin_name=//g")
+        fi
+        old_plugin_name=$(echo ${repo_name} | cut -d '-' -f3-)
+        new_plugin_name=$(echo ${repo_name/$old_plugin_name/$installed_plugin_dir_name})
+        if [[ ${repo_name} != ${new_plugin_name} ]]; then
+            mv ${repo_name} ${new_plugin_name}
+        fi
+        repo_name=${new_plugin_name}
+    else
+        repo_name=fledge-${type}-${name}
+    fi
+    cd -
+    if [ -d /tmp/doc.$$/${repo_name}/docs ]; then
+        rm -rf ${dir_type}/${repo_name}
+        mkdir -p ${dir_type}/${repo_name}
+        cp -r /tmp/doc.$$/${repo_name}/docs/. ${dir_type}/${repo_name}
+        if [ -f ${dir_type}/${repo_name}/index.rst ]; then
+            echo "    ${repo_name}/index" >> $dest
+        else
+            echo "*** WARNING: index.rst file is missing for ${repo_name}."
+        fi
+    else
+        echo "*** WARNING: ${repo_name} docs directory is missing."
+    fi
+    rm -rf /tmp/doc.$$
+}
+
+for repo in ${REPOSITORIES}
+do
+    type=$(echo $repo | sed -e 's/fledge-//' -e 's/-.*//')
+    dest=plugins/${type}.rst
+    if grep -q "$repo" <<< "$INBUILT_PLUGINS"; then
+        if [[ $repo == "fledge-north-OMF" ]]; then
+            name="fledge-north-OMF"
+            echo "    ${name}/index" >> $dest
+            mkdir plugins/${name}
+            ln -s ../../images plugins/${name}/images
+            echo '.. include:: ../../fledge-north-OMF.rst' > plugins/${name}/index.rst
+            # Append OMF.rst to the end of the file rather than including it so that we may edit the links to prevent duplicates
+            cat OMF.rst >> plugins/${name}/index.rst
+        elif [[ $repo == "fledge-rule-DataAvailability" ]]; then
+            name="fledge-rule-DataAvailability"
+            echo "    ${name}/index" >> $dest
+            mkdir plugins/${name}
+            ln -s $(pwd)/${name}/images plugins/${name}/images
+            echo '.. include:: ../../fledge-rule-DataAvailability/index.rst' > plugins/${name}/index.rst
+        elif [[ $repo == "fledge-rule-Threshold" ]]; then
+            name="fledge-rule-Threshold"
+            echo "    ${name}/index" >> $dest
+            mkdir plugins/${name}
+            ln -s $(pwd)/${name}/images plugins/${name}/images
+            echo '.. include:: ../../fledge-rule-Threshold/index.rst' > plugins/${name}/index.rst
+        fi
+    elif [ "$type" = "south" -o "$type" = "north" -o $type = "filter" -o $type = "rule" -o $type = "notify" ]; then
+        plugin_and_service_doc $repo $dest "plugins"
+    fi
+done
+
+cat > services/index.rst << EOFSERVICES
+*******************
+Additional Services
+*******************
+
+The following additional services are currently available to extend the functionality of Fledge. These are optional services not installed as part of the base Fledge installation.
+
+.. toctree::
+
+EOFSERVICES
+
+SERVICE_REPOS=$(echo "${REPOSITORIES}" | grep -o "[a-zA-Z0-9\-]*-service-[a-zA-Z0-9_\-]*" | sed -e 's/\([a-zA-Z0-9\-]*\)\-service-\([a-zA-Z0-9]*\)/\2-\1-service-\2/g' | sort -f | sed -e 's/\([a-zA-Z0-9]*\)\-\([a-zA-Z0-9\-]*\)/\2/g')
+echo "SERVICE REPOS LIST: "${SERVICE_REPOS}
+for repo in ${SERVICE_REPOS}
+do
+    type=$(echo $repo | sed -e 's/fledge-//' -e 's/-.*//')
+    dest=services/index.rst
+    plugin_and_service_doc $repo $dest "services"
+done
+
+# Cross Referencing list of plugins
+plugins_path=$(pwd)/plugins
+
+# HashMap used for storing keywords and repos
+declare -A KEYWORDS
+for dir in $plugins_path/*
+do
+    dir_name=$(echo $dir | sed 's/^.*fledge-/fledge-/')
+    if [[ $dir_name == *fledge-* ]]; then
+        if [ -f $plugins_path/$dir_name/keywords ]; then
+            keywords=$(cat $plugins_path/$dir_name/keywords | sed -e "s/,/ /g")
+            for k in $keywords
+            do
+                KEYWORDS+=(["$k"]+="$dir_name ")
+            done
+        fi
+    fi
+done
+
+function get_repos_list_by_keywords() {
+    DIR_NAME="$1"
+    REPOSITORIES_LIST=""
+    for i in "${!KEYWORDS[@]}"
+    do
+        repos_val=$(echo ${KEYWORDS[$i]} | grep -w "$DIR_NAME")
+        if [[ $repos_val != "" ]]; then
+            repos_result+=$(echo "$repos_val ")
+        fi
+    done
+    REPOSITORIES_LIST=$(echo "$repos_result" | xargs -n1 | grep -v "^$DIR_NAME$" | sort -u | xargs)
+    echo "$REPOSITORIES_LIST"
+}
+
+# See Also section added as per installed plugins directory path
+for dir in $plugins_path/*
+do
+    dir_name=$(echo $dir | sed 's/^.*fledge-/fledge-/')
+    if [[ $dir_name == *fledge-* ]]; then
+        if [ -f $plugins_path/$dir_name/keywords ]; then
+            result=$(get_repos_list_by_keywords "$dir_name")
+            echo "For $dir_name: $result"
+            if [[ -n "$result" ]]; then
+                cat >> $plugins_path/$dir_name/index.rst << EOFPLUGINS
+
+
+See Also
+--------
+EOFPLUGINS
+                for r in $result
+                do
+                     # Add link and description to the plugin
+                     description=$(cat $(pwd)/fledge_plugins.rst | grep -A1 -w "plugins/$r/index.html" | grep -v "$r" | head -n 1)
+                     echo "    \`$r <../$r/index.html>\`_  $description" >> $plugins_path/$dir_name/index.rst
+                     echo -e "\n" >> $plugins_path/$dir_name/index.rst
+                done
+            fi
+        fi
+    fi
+done

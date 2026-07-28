@@ -1,0 +1,9 @@
+# Cache
+.pytest_cache
+
+# Coverage
+.coverage
+htmlcov/
+
+# Test certificates
+!/unit/python/fledge/services/core/api/certs/*

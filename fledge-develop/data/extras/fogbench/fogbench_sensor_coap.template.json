@@ -1,0 +1,12 @@
+
+[
+  { "name"          : "asset_1",
+    "sensor_values" : [ { "name": "dp_1", "type": "number", "min": -2.0, "max": 2.0 },
+                        { "name": "dp_1", "type": "number", "min": -2.0, "max": 2.0 },
+                        { "name": "dp_1", "type": "number", "min": -2.0, "max": 2.0 } ] },
+  { "name"          : "asset_2",
+    "sensor_values" : [ { "name": "lux", "type": "number", "min": 0, "max": 130000, "precision":3 } ] },
+  { "name"          : "asset_3",
+    "sensor_values" : [ { "name": "pressure", "type": "number", "min": 800.0, "max": 1100.0, "precision":1 } ] }
+]
+

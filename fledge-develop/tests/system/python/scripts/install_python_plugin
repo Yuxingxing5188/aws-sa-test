@@ -1,0 +1,75 @@
+#!/usr/bin/env bash
+set -e
+
+__author__="Ashish Jabble"
+__copyright__="Copyright (c) 2019 Dianomic Systems"
+__license__="Apache 2.0"
+__version__="1.0.0"
+
+###########################################################################################################
+# Usage text for this script
+# $FLEDGE_ROOT/tests/system/python/scripts/install_python_plugin {BRANCH_NAME} {PLUGIN_TYPE} {PLUGIN_NAME}
+###########################################################################################################
+
+BRANCH_NAME=$1
+PLUGIN_TYPE=$2
+PLUGIN_NAME=$3
+USE_PIP_CACHE=$4
+
+[[ -z "${BRANCH_NAME}" ]] && echo "Branch name not found." && exit 1
+[[ -z "${PLUGIN_TYPE}" ]] && echo "Plugin type not found." && exit 1
+[[ -z "${PLUGIN_NAME}" ]] && echo "Plugin name not found." && exit 1
+
+USE_PIP_CACHE=${USE_PIP_CACHE,,}
+if [[ "${USE_PIP_CACHE}" = false ]]; then USE_PIP_CACHE="--no-cache-dir"; else USE_PIP_CACHE=""; fi
+
+
+REPO_NAME=fledge-${PLUGIN_TYPE}-${PLUGIN_NAME}
+
+if [ "${PLUGIN_NAME}" == "http_south" ] || [ "${PLUGIN_NAME}" == "http_north" ] ; then
+   REPO_NAME=fledge-${PLUGIN_TYPE}-http
+fi
+
+
+get_pip_break_system_flag() {
+    # Get Python version from python3 --version and parse it
+    PYTHON_VERSION=$(python3 --version 2>&1 | awk '{print $2}')
+    PYTHON_MAJOR=$(echo "$PYTHON_VERSION" | cut -d. -f1)
+    PYTHON_MINOR=$(echo "$PYTHON_VERSION" | cut -d. -f2)
+
+    # Default to empty flag
+    FLAG=""
+
+    # Set the FLAG only for Python versions 3.11 or higher
+    if [ "$PYTHON_MAJOR" -gt 3 ] || { [ "$PYTHON_MAJOR" -eq 3 ] && [ "$PYTHON_MINOR" -ge 11 ]; }; then
+        FLAG="--break-system-packages"
+    fi
+
+    # Return the FLAG (via echo)
+    echo "$FLAG"
+}
+
+clean () {
+   rm -rf /tmp/${REPO_NAME}
+   rm -rf ${FLEDGE_ROOT}/python/fledge/plugins/${PLUGIN_TYPE}/fledge-${PLUGIN_TYPE}-${PLUGIN_NAME}
+}
+
+clone_repo () {
+   git clone -b ${BRANCH_NAME} --single-branch https://github.com/fledge-iot/${REPO_NAME}.git /tmp/${REPO_NAME}
+}
+
+copy_file_and_requirement () {
+    if [ "$PLUGIN_NAME" = "http" ]; then
+        cp -r /tmp/${REPO_NAME}/python/fledge/plugins/${PLUGIN_TYPE}/${PLUGIN_NAME}_${PLUGIN_TYPE} $FLEDGE_ROOT/python/fledge/plugins/${PLUGIN_TYPE}/
+    else
+        cp -r /tmp/${REPO_NAME}/python/fledge/plugins/${PLUGIN_TYPE}/${PLUGIN_NAME} $FLEDGE_ROOT/python/fledge/plugins/${PLUGIN_TYPE}/
+    fi
+    req_file=$(find /tmp/${REPO_NAME} -name requirement*.txt)
+    BREAK_PKG_FLAG=$(get_pip_break_system_flag)
+    [ ! -z "${req_file}" ] && python3 -m pip install --user -Ir ${req_file} ${USE_PIP_CACHE} ${BREAK_PKG_FLAG:+$BREAK_PKG_FLAG} || echo "No such external dependency needed for ${PLUGIN_NAME} plugin."
+}
+
+clean
+clone_repo
+copy_file_and_requirement
+echo "${PLUGIN_NAME} plugin is installed."

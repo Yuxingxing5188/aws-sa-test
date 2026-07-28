@@ -1,0 +1,41 @@
+#!/usr/bin/env bash
+
+FLEDGE_ROOT="/usr/local/fledge"
+source ../common/scripts/reset_user_authentication "$FLEDGE_ROOT"
+
+install_postgres() {
+  sudo apt install -y postgresql
+  sudo -u postgres createuser -d "$(whoami)"
+}
+
+_config_reading_db () {
+  if [[ "postgres" == @($1|$2) ]]
+  then
+    install_postgres
+  fi
+  [[ -f $FLEDGE_ROOT/data/etc/storage.json ]] && echo $(jq -c --arg STORAGE_PLUGIN_VAL "${1}" '.plugin.value=$STORAGE_PLUGIN_VAL' $FLEDGE_ROOT/data/etc/storage.json) > $FLEDGE_ROOT/data/etc/storage.json || true
+  [[ -f $FLEDGE_ROOT/data/etc/storage.json ]] && echo $(jq -c --arg READING_PLUGIN_VAL "${2}" '.readingPlugin.value=$READING_PLUGIN_VAL' $FLEDGE_ROOT/data/etc/storage.json) > $FLEDGE_ROOT/data/etc/storage.json || true
+}
+
+# check for storage plugin
+. ./test.config
+
+if [[  ${STORAGE} == @(sqlite|postgres|sqlitelb) && ${READING_PLUGIN_DB} == @(Use main plugin|sqlitememory|sqlite|postgres|sqlitelb) ]]
+then
+   _config_reading_db "${STORAGE}" "${READING_PLUGIN_DB}"
+else
+  echo "Invalid Storage Configuration"
+  exit 1
+fi
+
+echo "Stopping Fledge using systemctl ..."
+# FIXME: FOGL-1499 After the issue is resolved, remove the explicit 'kill' command and use 'systemctl stop' instead
+# sudo systemctl stop fledge
+/usr/local/fledge/bin/fledge kill
+echo -e "YES\nYES" | $FLEDGE_ROOT/bin/fledge reset || exit 1
+echo
+echo "Starting Fledge using systemctl ..."
+# FIXME: FOGL-1499 Once the issue is resolved, replace 'restart' with 'start
+sudo systemctl restart fledge
+echo "Fledge Status"
+systemctl status fledge | grep "Active"

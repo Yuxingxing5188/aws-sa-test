@@ -1,0 +1,8 @@
+{               
+   "readings" : [       
+                {       
+                        "asset_code": "MyAsset",
+                        "reading" : { "rate" : 90 },
+                        "user_ts" : "now()"
+                }]
+}

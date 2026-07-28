@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+# Run a Fledge task written in C
+if [ "${FLEDGE_ROOT}" = "" ]; then
+	FLEDGE_ROOT=/usr/local/fledge
+fi
+
+if [ ! -d "${FLEDGE_ROOT}" ]; then
+	logger "Fledge home directory missing or incorrectly set environment"
+	exit 1
+fi
+
+os_name=`(grep -o '^NAME=.*' /etc/os-release | cut -f2 -d\" | sed 's/"//g')`
+
+if [[ $os_name == *"Raspbian"*  ]]; then
+
+	cpulimit -l 40 -- $FLEDGE_ROOT/tasks/statistics_history "$@"
+else
+	# Standard execution on other platforms
+	$FLEDGE_ROOT/tasks/statistics_history "$@"
+fi

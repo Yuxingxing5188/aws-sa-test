@@ -1,0 +1,504 @@
+{
+   "readings" : [
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 90 },
+			"user_ts" : "2017-10-11 15:10:51.927191906"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 13 },
+			"user_ts" : "2017-10-11 15:10:51.930077316"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 84 },
+			"user_ts" : "2017-10-11 15:10:51.933029946"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 96 },
+			"user_ts" : "2017-10-11 15:10:51.936351551"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 2 },
+			"user_ts" : "2017-10-11 15:10:51.939633486"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 54 },
+			"user_ts" : "2017-10-11 15:10:51.942860303"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 28 },
+			"user_ts" : "2017-10-11 15:10:51.946072705"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 3 },
+			"user_ts" : "2017-10-11 15:10:51.949303775"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 77 },
+			"user_ts" : "2017-10-11 15:10:51.952531085"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 38 },
+			"user_ts" : "2017-10-11 15:10:51.955723213"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 26 },
+			"user_ts" : "2017-10-11 15:10:51.959048996"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 86 },
+			"user_ts" : "2017-10-11 15:10:51.963008671"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 39 },
+			"user_ts" : "2017-10-11 15:10:51.966955796"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 57 },
+			"user_ts" : "2017-10-11 15:10:51.970002731"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 73 },
+			"user_ts" : "2017-10-11 15:10:51.973462058"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 22 },
+			"user_ts" : "2017-10-11 15:10:51.979245019"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 34 },
+			"user_ts" : "2017-10-11 15:10:51.982825759"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 78 },
+			"user_ts" : "2017-10-11 15:10:51.986811733"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 20 },
+			"user_ts" : "2017-10-11 15:10:51.990407738"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 70 },
+			"user_ts" : "2017-10-11 15:10:51.993641575"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 17 },
+			"user_ts" : "2017-10-11 15:10:51.996855039"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 2 },
+			"user_ts" : "2017-10-11 15:10:52.000131125"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 18 },
+			"user_ts" : "2017-10-11 15:10:52.005780345"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 52 },
+			"user_ts" : "2017-10-11 15:10:52.009004973"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 62 },
+			"user_ts" : "2017-10-11 15:10:52.012432720"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 47 },
+			"user_ts" : "2017-10-11 15:10:52.015931562"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 73 },
+			"user_ts" : "2017-10-11 15:10:52.019228599"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 9 },
+			"user_ts" : "2017-10-11 15:10:52.022430891"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 66 },
+			"user_ts" : "2017-10-11 15:10:52.026312804"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 30 },
+			"user_ts" : "2017-10-11 15:10:52.029248210"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 70 },
+			"user_ts" : "2017-10-11 15:10:52.031930036"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 41 },
+			"user_ts" : "2017-10-11 15:10:52.034759931"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 2 },
+			"user_ts" : "2017-10-11 15:10:52.037494767"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 69 },
+			"user_ts" : "2017-10-11 15:10:52.040900408"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 98 },
+			"user_ts" : "2017-10-11 15:10:52.043678399"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 13 },
+			"user_ts" : "2017-10-11 15:10:52.046833403"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 91 },
+			"user_ts" : "2017-10-11 15:10:52.050656950"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 18 },
+			"user_ts" : "2017-10-11 15:10:52.053705004"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 78 },
+			"user_ts" : "2017-10-11 15:10:52.056612533"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 70 },
+			"user_ts" : "2017-10-11 15:10:52.059816818"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 48 },
+			"user_ts" : "2017-10-11 15:10:52.062667327"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 94 },
+			"user_ts" : "2017-10-11 15:10:52.066313145"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 79 },
+			"user_ts" : "2017-10-11 15:10:52.070054298"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 87 },
+			"user_ts" : "2017-10-11 15:10:52.073032300"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 60 },
+			"user_ts" : "2017-10-11 15:10:52.075709529"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 48 },
+			"user_ts" : "2017-10-11 15:10:52.078469594"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 88 },
+			"user_ts" : "2017-10-11 15:10:52.081413496"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 3 },
+			"user_ts" : "2017-10-11 15:10:52.084291705"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 93 },
+			"user_ts" : "2017-10-11 15:10:52.086988344"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 83 },
+			"user_ts" : "2017-10-11 15:10:52.089854394"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 76 },
+			"user_ts" : "2017-10-11 15:10:52.092628067"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 97 },
+			"user_ts" : "2017-10-11 15:10:52.095270252"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 31 },
+			"user_ts" : "2017-10-11 15:10:52.098438807"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 49 },
+			"user_ts" : "2017-10-11 15:10:52.100992475"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 36 },
+			"user_ts" : "2017-10-11 15:10:52.103591495"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 15 },
+			"user_ts" : "2017-10-11 15:10:52.106399825"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 67 },
+			"user_ts" : "2017-10-11 15:10:52.109127938"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 67 },
+			"user_ts" : "2017-10-11 15:10:52.111779897"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 94 },
+			"user_ts" : "2017-10-11 15:10:52.114243636"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 68 },
+			"user_ts" : "2017-10-11 15:10:52.116767938"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 22 },
+			"user_ts" : "2017-10-11 15:10:52.119724561"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 54 },
+			"user_ts" : "2017-10-11 15:10:52.122293876"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 94 },
+			"user_ts" : "2017-10-11 15:10:52.124791131"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 49 },
+			"user_ts" : "2017-10-11 15:10:52.127260082"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 59 },
+			"user_ts" : "2017-10-11 15:10:52.130223611"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 6 },
+			"user_ts" : "2017-10-11 15:10:52.132656635"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 82 },
+			"user_ts" : "2017-10-11 15:10:52.135199400"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 5 },
+			"user_ts" : "2017-10-11 15:10:52.137822954"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 1 },
+			"user_ts" : "2017-10-11 15:10:52.140390135"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 53 },
+			"user_ts" : "2017-10-11 15:10:52.142788188"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 69 },
+			"user_ts" : "2017-10-11 15:10:52.145544112"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 97 },
+			"user_ts" : "2017-10-11 15:10:52.147995971"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 58 },
+			"user_ts" : "2017-10-11 15:10:52.150512948"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 76 },
+			"user_ts" : "2017-10-11 15:10:52.153044797"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 81 },
+			"user_ts" : "2017-10-11 15:10:52.157244547"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 30 },
+			"user_ts" : "2017-10-11 15:10:52.160105403"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 4 },
+			"user_ts" : "2017-10-11 15:10:52.163172158"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 67 },
+			"user_ts" : "2017-10-11 15:10:52.165631529"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 5 },
+			"user_ts" : "2017-10-11 15:10:52.169386767"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 72 },
+			"user_ts" : "2017-10-11 15:10:52.171844558"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 20 },
+			"user_ts" : "2017-10-11 15:10:52.174302648"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 58 },
+			"user_ts" : "2017-10-11 15:10:52.176815980"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 75 },
+			"user_ts" : "2017-10-11 15:10:52.179330413"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 74 },
+			"user_ts" : "2017-10-11 15:10:52.182026984"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 60 },
+			"user_ts" : "2017-10-11 15:10:52.184453875"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 96 },
+			"user_ts" : "2017-10-11 15:10:52.187060071"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 30 },
+			"user_ts" : "2017-10-11 15:10:52.189544659"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 40 },
+			"user_ts" : "2017-10-11 15:10:52.192069519"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 33 },
+			"user_ts" : "2017-10-11 15:10:52.195018406"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 87 },
+			"user_ts" : "2017-10-11 15:10:52.197861237"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 67 },
+			"user_ts" : "2017-10-11 15:10:52.200490704"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 40 },
+			"user_ts" : "2017-10-11 15:10:52.203486404"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 44 },
+			"user_ts" : "2017-10-11 15:10:52.206153509"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 7 },
+			"user_ts" : "2017-10-11 15:10:52.208776100"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 52 },
+			"user_ts" : "2017-10-11 15:10:52.211964714"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 93 },
+			"user_ts" : "2017-10-11 15:10:52.214504566"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 43 },
+			"user_ts" : "2017-10-11 15:10:52.219924224"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 66 },
+			"user_ts" : "2017-10-11 15:10:52.222819931"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 8 },
+			"user_ts" : "2017-10-11 15:10:52.225401299"
+		},
+		{
+			"asset_code": "MyAsset",
+			"reading" : { "rate" : 79 },
+			"user_ts" : "2017-10-11 15:10:52.228495495"
+		}
+	]
+}

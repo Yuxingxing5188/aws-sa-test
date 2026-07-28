@@ -1,0 +1,159 @@
+{
+   "readings" : [
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 90 },
+			"user_ts" : "2019-10-11 15:10:51.927191906"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 13 },
+			"user_ts" : "2019-10-11 15:10:51.930077316"
+		},
+		{
+			"asset_code": "Asset2",
+			"reading" : { "temp" : 84, "pressure": 1001 },
+			"user_ts" : "2019-10-11 15:10:51.933029946"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 96, "rms": 10 },
+			"user_ts" : "2019-10-11 15:10:51.936351551"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 2 },
+			"user_ts" : "2019-10-11 15:10:51.939633486"
+		},
+		{
+			"asset_code": "Asset2",
+			"reading" : { "temp" : 54 },
+			"user_ts" : "2019-10-11 15:10:51.942860303"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 28 },
+			"user_ts" : "2019-10-11 15:10:51.946072705"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 3 },
+			"user_ts" : "2019-10-11 15:10:51.949303775"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rms" : 70 },
+			"user_ts" : "2019-10-11 15:10:51.993641575"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 17, "rms" : 81 },
+			"user_ts" : "2019-10-11 15:10:51.996855039"
+		},
+		{
+			"asset_code": "Asset2",
+			"reading" : { "temp" : 21 },
+			"user_ts" : "2019-10-11 15:10:52.000131125"
+		},
+		{
+			"asset_code": "Asset2",
+			"reading" : { "pressure" : 918 },
+			"user_ts" : "2019-10-11 15:10:52.005780345"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 52 },
+			"user_ts" : "2019-10-11 15:10:52.009004973"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 62 },
+			"user_ts" : "2019-10-11 15:10:52.012432720"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 47, "rms" : 19 },
+			"user_ts" : "2019-10-11 15:10:52.015931562"
+		},
+		{
+			"asset_code": "Asset2",
+			"reading" : { "temp" : 73, "pressure" : 1023 },
+			"user_ts" : "2019-10-11 15:10:52.019228599"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 9 },
+			"user_ts" : "2019-10-11 15:10:52.022430891"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 66, "rms" : 15 },
+			"user_ts" : "2019-10-11 15:10:52.026312804"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 30 },
+			"user_ts" : "2019-10-11 15:10:52.029248210"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 70 },
+			"user_ts" : "2019-10-11 15:10:52.031930036"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 41 },
+			"user_ts" : "2019-10-11 15:10:52.034759931"
+		},
+		{
+			"asset_code": "Asset2",
+			"reading" : { "pressure" : 30, "temp" : 19 },
+			"user_ts" : "2019-10-11 15:10:54.189544659"
+		},
+		{
+			"asset_code": "Asset2",
+			"reading" : { "temp" : 12.306 },
+			"user_ts" : "2019-10-11 15:10:54.192069519"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 33, "rms": 99 },
+			"user_ts" : "2019-10-11 15:10:54.195018406"
+		},
+		{
+			"asset_code": "Asset2",
+			"reading" : { "temp" : 87 },
+			"user_ts" : "2019-10-11 15:10:54.197861237"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 67, "rms" : 11 },
+			"user_ts" : "2019-10-11 15:10:54.200490704"
+		},
+		{
+			"asset_code": "Asset2",
+			"reading" : { "temp" : 40 },
+			"user_ts" : "2019-10-11 15:10:53.203486404"
+		},
+		{
+			"asset_code": "Asset2",
+			"reading" : { "pressure" : 44, "temp": 90 },
+			"user_ts" : "2019-10-11 15:10:53.206153509"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 7 },
+			"user_ts" : "2019-10-11 15:10:53.208776100"
+		},
+		{
+			"asset_code": "Asset2",
+			"reading" : { "pressure" : 8, "temp" : 19, "lux": 3456 },
+			"user_ts" : "2019-10-11 15:10:54.225401299"
+		},
+		{
+			"asset_code": "Asset1",
+			"reading" : { "rate" : 79 },
+			"user_ts" : "2019-10-11 15:10:54.228495495"
+		}
+	]
+}

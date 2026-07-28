@@ -1,0 +1,105 @@
+#!/bin/bash
+
+##--------------------------------------------------------------------
+## Copyright (c) 2017-2018 OSIsoft, LLC
+##
+## Licensed under the Apache License, Version 2.0 (the "License");
+## you may not use this file except in compliance with the License.
+## You may obtain a copy of the License at
+##
+##     http://www.apache.org/licenses/LICENSE-2.0
+##
+## Unless required by applicable law or agreed to in writing, software
+## distributed under the License is distributed on an "AS IS" BASIS,
+## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+## See the License for the specific language governing permissions and
+## limitations under the License.
+##--------------------------------------------------------------------
+
+#
+# This script is used to call the PosegreSQL storage plugin script
+# to store and retrieve the sensor data when the database
+# is embedded in Fledge
+#
+
+#set -x
+
+# Include common code
+source "${FLEDGE_ROOT}/scripts/common/get_storage_plugin.sh"
+source "${FLEDGE_ROOT}/scripts/common/get_readings_plugin.sh"
+
+PLUGIN_TO_USE=""
+
+# Logger wrapper
+storage_log() {
+    write_log "Storage" "script.storage" "$1" "$2" "$3" "$4"
+}
+
+#############
+## MAIN LOGIC
+#############
+
+
+PLUGIN_TO_USE=`get_storage_plugin`
+READINGS_PLUGIN_TO_USE=`get_readings_plugin`
+if [[ "${#PLUGIN_TO_USE}" -eq 0 ]]; then
+    storage_log "err" "Missing plugin from Fledge storage service" "all" "pretty"
+    exit 1
+fi
+
+PLUGIN_SCRIPT="$FLEDGE_ROOT/scripts/plugins/storage/$PLUGIN_TO_USE.sh"
+if [[ ! -x "$PLUGIN_SCRIPT" ]]; then
+
+    # Missing storage plugin script
+    storage_log "err" "Fledge cannot start." "all" "pretty"
+    storage_log "err" "Missing Storage Plugin script $PLUGIN_SCRIPT." "all" "pretty"
+    exit 1
+
+fi
+
+# The reset must be executed on both the storage and readings plugins, if the
+# readings are stored in a different plugin. On the readings plugin this becomes
+# a purge operation.
+#
+# The purge action is only executed via the readings plugin if defined, or
+# the main storage plugin is not defined.
+
+if [[ "$1" == "reset" ]] ; then
+	# Pass action in $1 and FLEDGE_VERSION in $2
+	source "$PLUGIN_SCRIPT" $1 $2
+
+	if [[ "$PLUGIN_TO_USE" != "$READINGS_PLUGIN_TO_USE" ]]; then
+		READINGS_SCRIPT="$FLEDGE_ROOT/scripts/plugins/storage/$READINGS_PLUGIN_TO_USE.sh"
+		if [[ -x "$READINGS_SCRIPT" ]]; then
+			source "$READINGS_SCRIPT" purge $2
+		fi
+	fi
+elif [[ "$1" == "purge" ]]; then
+	# Pass action in $1 and FLEDGE_VERSION in $2
+
+	if [[ "$PLUGIN_TO_USE" != "$READINGS_PLUGIN_TO_USE" ]]; then
+		READINGS_SCRIPT="$FLEDGE_ROOT/scripts/plugins/storage/$READINGS_PLUGIN_TO_USE.sh"
+		# Soem readings plugins, notably sqlitememory, do not have a script
+		if [[ -x "$READINGS_SCRIPT" ]]; then
+		    source "$READINGS_SCRIPT" $1 $2
+	        fi
+	else
+		source "$PLUGIN_SCRIPT" $1 $2
+	fi
+else
+	# Pass any other operation to the storage plugin
+	source "$PLUGIN_SCRIPT" $1 $2
+	# Also start the readings plugin if it is different to the configuration plugin
+	# The reason to do this is to create the schema in the readings database if required
+	if [[ "$PLUGIN_TO_USE" != "$READINGS_PLUGIN_TO_USE" ]]; then
+		READINGS_SCRIPT="$FLEDGE_ROOT/scripts/plugins/storage/$READINGS_PLUGIN_TO_USE.sh"
+		# Some readings plugins, notably sqlitememory, do not have a script
+		if [[ -x "$READINGS_SCRIPT" ]]; then
+		    source "$READINGS_SCRIPT" $1 $2
+	        fi
+	fi
+fi
+
+# exit cannot be used because the script is sourced.
+#exit $?
+

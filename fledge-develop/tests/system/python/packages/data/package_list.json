@@ -1,0 +1,30 @@
+{
+	"p0": [{
+		"south": ["modbus", "mqtt-readings", "sinusoid"],
+		"north": ["httpc"],
+		"filter": ["expression", "python35"],
+		"notify": ["asset", "python35"],
+		"rule": ["average", "simple-expression"]
+	}],
+	"p1": [{
+		"south": ["dnp3", "rpienviro", "flirax8", "game", "mqtt-sparkplug", "opcua", "playback", "randomwalk"],
+		"north": ["kafka", "opcua"],
+		"filter": ["change", "delta", "fft", "flirvalidity", "metadata", "rms"],
+		"notify": ["email"],
+		"rule": ["outofbound"]
+	}],
+	"p2": [{
+		"south": ["benchmark", "cc2650", "coap", "csv", "dht11V2", "expression", "http-south", "modbustcp", "openweathermap", "random", "systeminfo", "wind-turbine"],
+		"north": ["http-north", "thingspeak"],
+		"filter": ["asset", "rate", "scale", "threshold"],
+		"notify": ["slack", "telegram"],
+		"rule": []
+	}],
+	"p3": [{
+		"south": ["am2315", "csv-async", "dht11", "ina219", "pt100", "roxtec", "sensehat", "sensorphone"],
+		"north": [],
+		"filter": ["python27", "scale-set"],
+		"notify": ["alexa", "blynk", "hangouts", "ifttt"],
+		"rule": []
+	}]
+}

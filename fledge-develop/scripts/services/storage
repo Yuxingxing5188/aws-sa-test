@@ -1,0 +1,95 @@
+#!/bin/bash
+# Run a Fledge Storage service written in C/C++
+set -eo pipefail
+storageExec=""
+pluginScriptPath=""
+
+if [[ "${FLEDGE_ROOT}" = "" ]]; then
+    if [[ ! -x /usr/local/fledge/services/fledge.services.storage ]] && [[ ! -x /usr/local/fledge/services/storage ]]; then
+        logger "Unable to find Fledge storage microservice in the default location"
+        exit 1
+    else
+        # Set plugin script path
+	pluginScriptPath=/usr/local/fledge/scripts/plugins/storage/
+        # Set storage service exec
+        if [[ -x /usr/local/fledge/services/fledge.services.storage ]]; then
+            export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/usr/local/fledge/lib
+            storageExec=/usr/local/fledge/services/fledge.services.storage
+        else
+            storageExec=/usr/local/fledge/services/storage
+        fi
+	if [[ "$1" != "--plugin" ]]; then
+            logger "Fledge storage microservice in the default location: /usr/local/fledge"
+        fi
+    fi
+else
+    # Include common logger script code
+    . $FLEDGE_ROOT/scripts/common/write_log.sh
+    if [[ ! -x ${FLEDGE_ROOT}/services/fledge.services.storage ]] && [[ ! -x ${FLEDGE_ROOT}/services/storage ]]; then
+        write_log "" "scripts.services.storage" "err" "Unable to find Fledge storage microservice in ${FLEDGE_ROOT}/services/storage" "logonly" ""
+        exit 1
+    else
+        # Set plugin script path
+	pluginScriptPath=${FLEDGE_ROOT}/scripts/plugins/storage/
+        # Set storage service exec
+        if [[ -x ${FLEDGE_ROOT}/services/fledge.services.storage ]]; then
+            export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${FLEDGE_ROOT}/lib:/usr/local/fledge/lib
+            storageExec=${FLEDGE_ROOT}/services/fledge.services.storage
+        else
+            storageExec=${FLEDGE_ROOT}/services/storage
+        fi
+	if [[ "$1" != "--plugin" ]]; then
+            write_log "" "scripts.services.storage" "info" "Fledge storage microservice found in FLEDGE_ROOT location: ${FLEDGE_ROOT}" "logonly" ""
+	fi
+	if [[ "$1" != "--readingsPlugin" ]]; then
+            write_log "" "scripts.services.storage" "info" "Fledge storage microservice found in FLEDGE_ROOT location: ${FLEDGE_ROOT}" "logonly" ""
+	fi
+    fi
+fi
+
+if [[ "$1" == "--plugin" ]]; then
+    # Get db schema
+    FLEDGE_VERSION_FILE="${FLEDGE_ROOT}/VERSION"
+    FLEDGE_SCHEMA=`cat ${FLEDGE_VERSION_FILE} | tr -d ' ' | grep -i "FLEDGE_SCHEMA=" | sed -e 's/\(.*\)=\(.*\)/\2/g'`
+    # Get storage engine
+    res=(`${storageExec} --plugin`)
+    storagePlugin=${res[0]}
+    managedEngine=${res[1]}
+    # Call plugin check: this will create database if not set yet
+    ${pluginScriptPath}/${storagePlugin}.sh init ${FLEDGE_SCHEMA} ${managedEngine}
+    if [[ "$VALGRIND_STORAGE" = "y" ]]; then
+		write_log "" "scripts.services.storage" "warn" "Running storage service under valgrind" "logonly" ""
+		if [[ -f "$HOME/storage.valgrind.out" ]]; then
+			rm $HOME/storage.valgrind.out
+		fi
+		valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --log-file=$HOME/storage.valgrind.out ${storageExec} "$@" -d &
+    else
+		${storageExec} "$@"
+    fi
+elif [[ "$1" == "--readingsPlugin" ]]; then
+    # Get db schema
+    FLEDGE_VERSION_FILE="${FLEDGE_ROOT}/VERSION"
+    FLEDGE_SCHEMA=`cat ${FLEDGE_VERSION_FILE} | tr -d ' ' | grep -i "FLEDGE_SCHEMA=" | sed -e 's/\(.*\)=\(.*\)/\2/g'`
+    # Get storage engine
+    res=(`${storageExec} --readingsPlugin`)
+    # Check if the first three words are "Use main plugin"
+    if [[ "$res" =~ "Use main plugin" ]]; then
+        res=(`${storageExec} --plugin`)
+    fi
+    storagePlugin=${res[0]}
+    managedEngine=${res[1]}
+    # Call plugin check: this will create database if not set yet
+    if [[ -x ${pluginScriptPath}/${storagePlugin}.sh ]]; then
+       ${pluginScriptPath}/${storagePlugin}.sh init ${FLEDGE_SCHEMA} ${managedEngine}
+    fi
+    ${storageExec} "$@"
+elif [[ "$VALGRIND_STORAGE" = "y" ]]; then
+        write_log "" "scripts.services.storage" "warn" "Running storage service under valgrind" "logonly" ""
+	if [[ -f "$HOME/storage.valgrind.out" ]]; then
+		rm $HOME/storage.valgrind.out
+	fi
+	valgrind --leak-check=full --show-leak-kinds=all --trace-children=yes --log-file=$HOME/storage.valgrind.out ${storageExec} "$@" -d &
+else
+	${storageExec} "$@"
+fi
+exit 0

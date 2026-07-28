@@ -1,0 +1,1 @@
+ALTER TABLE fledge.configuration DROP COLUMN display_name;

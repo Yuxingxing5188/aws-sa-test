@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+set -e
+
+__author__="Ashish Jabble"
+__copyright__="Copyright (c) 2019 Dianomic Systems Inc."
+__license__="Apache 2.0"
+__version__="1.0.0"
+
+######################################################################################################
+# Usage text for this script
+# $FLEDGE_ROOT/tests/system/python/scripts/package/setup ${PACKAGE_BUILD_VERSION}
+######################################################################################################
+
+PACKAGE_BUILD_VERSION=$1
+
+[[ -z "${PACKAGE_BUILD_VERSION}" ]] && echo "Build Version not found." && exit 1
+
+OS_NAME=$(grep -o '^NAME=.*' /etc/os-release | cut -f2 -d\" | sed 's/"//g')
+ID=$(cat /etc/os-release | grep -w ID | cut -f2 -d"=" | tr -d '"')
+UNAME=$(uname -m)
+VERSION_ID=$(cat /etc/os-release | grep -w VERSION_ID | cut -f2 -d"=" |  tr -d '"')
+echo "Version ID is ${VERSION_ID}"
+
+
+if [[ ${OS_NAME} == *"Red Hat"* || ${OS_NAME} == *"CentOS"* ]]; then
+    if [[ ${VERSION_ID} -eq "7" ]]; then ARCHIVE_PKG_OS="${ID}7"; else ARCHIVE_PKG_OS="${ID}-stream-9"; fi
+
+    echo "Build version is ${PACKAGE_BUILD_VERSION}"
+    echo "ID is ${ID} and Archive package OS is ${ARCHIVE_PKG_OS}"
+    echo "Uname is ${UNAME}"
+
+    sudo cp -f /etc/yum.repos.d/fledge.repo /etc/yum.repos.d/fledge.repo.bak | true
+
+    # Configure Fledge repo
+    echo -e "[fledge]\n\
+name=fledge Repository\n\
+baseurl=http://archives.fledge-iot.org/${PACKAGE_BUILD_VERSION}/${ARCHIVE_PKG_OS}/${UNAME}/\n\
+enabled=1\n\
+gpgkey=http://archives.fledge-iot.org/RPM-GPG-KEY-fledge\n\
+gpgcheck=1" | sudo tee /etc/yum.repos.d/fledge.repo
+
+    # Install prerequisites
+    if [[ ${ID} = "centos" ]]; then
+        if [[ ${VERSION_ID} -eq "7" ]]; then
+            sudo yum install -y centos-release-scl-rh
+            sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+        fi
+    elif [[ ${ID} = "rhel" ]]; then
+        sudo yum-config-manager --enable 'Red Hat Software Collections RPMs for Red Hat Enterprise Linux 7 Server from RHUI'
+    fi
+
+    sudo yum -y check-update && sudo yum -y update
+    echo "==================== DONE check-update, update ============================"
+
+    time sudo yum install -y fledge
+    echo "==================== DONE INSTALLING Fledge =================="
+
+    if [ "${FLEDGE_ENVIRONMENT}" != "docker" ]; then
+        time sudo yum install -y fledge-gui
+        echo "==================== DONE INSTALLING Fledge GUI ======================"
+    fi
+else
+    if [[ ${ID} = "ubuntu" ]]; then
+        VERSION_ID=$(echo "${VERSION_ID//.}")
+        ID="ubuntu${VERSION_ID}";
+    elif [[ ${ID} = "raspbian" ]]; then
+        ID=$(cat /etc/os-release | grep VERSION_CODENAME | cut -f2 -d"=")
+        UNAME="armv7l"
+    fi
+    
+    echo "Build version is "${PACKAGE_BUILD_VERSION}
+    echo "ID is "${ID}
+    echo "uname is "${UNAME}
+    
+    if [[ -f /etc/apt/sources.list.d/fledge.list ]]; then cd /etc/apt/sources.list.d/ && sudo cp -f fledge.list fledge.list.bak && sudo rm -f fledge.list; fi
+    sudo sed -i "/\b\(archives.fledge-iot.org\)\b/d" /etc/apt/sources.list
+
+    sudo apt update && sudo apt upgrade -y && sudo apt update
+    echo "==================== DONE update, upgrade, update ============================"
+
+    wget -q -O - http://archives.fledge-iot.org/KEY.gpg | sudo apt-key add -
+    echo "deb http://archives.fledge-iot.org/${PACKAGE_BUILD_VERSION}/${ID}/${UNAME}/ /" | sudo tee -a /etc/apt/sources.list.d/fledge.list
+    sudo apt update
+    
+    time sudo DEBIAN_FRONTEND=noninteractive apt install -yq fledge
+    echo "==================== DONE INSTALLING Fledge =================="
+    
+    if [ "${FLEDGE_ENVIRONMENT}" != "docker" ]; then     
+        time sudo apt install -y fledge-gui
+        echo "==================== DONE INSTALLING Fledge GUI ======================"
+    fi
+fi
